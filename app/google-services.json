@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778767053391",
+    "project_id": "mediasosialapp-dbe43",
+    "storage_bucket": "mediasosialapp-dbe43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778767053391:android:068fb452ede12aa774303a",
+        "android_client_info": {
+          "package_name": "com.example.sosialmediaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACrOxge71CduYZNfCRSNqEUJqSUP_sGAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
