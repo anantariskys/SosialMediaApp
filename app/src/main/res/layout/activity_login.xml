@@ -3,31 +3,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background"
+    android:gravity="center"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email" />
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword" />
-
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login" />
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/logo"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Logo" />
 
     <TextView
-        android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Belum punya akun? Daftar"
-        android:textColor="@android:color/holo_blue_light" />
+        android:text="JKSocial"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:textColor="@color/white"
+    />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/background"
+        android:layout_margin="16dp"
+        android:clipToPadding="false"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+       >
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/secondary"
+            android:textColorHint="@color/secondary" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/ic_password"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/secondary"
+        android:textColorHint="@color/secondary"
+
+            />
+
+        <Button
+
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:backgroundTint="@color/primaryDark"
+            android:textColor="@android:color/white"
+       />
+
+        <Button
+            android:id="@+id/tvRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Belum punya akun? Daftar"
+            android:textColor="@color/secondary"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+
 </LinearLayout>
