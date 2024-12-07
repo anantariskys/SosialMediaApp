@@ -3,6 +3,7 @@ package com.example.sosialmediaapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Initialize Create Post button
-        val btnCreatePost = findViewById<Button>(R.id.btnCreatePost)
+        val btnCreatePost = findViewById<ImageButton>(R.id.btnCreatePost)
         btnCreatePost.setOnClickListener {
             val intent = Intent(this, PostingActivity::class.java)
             startActivity(intent)
@@ -49,6 +50,12 @@ class MainActivity : AppCompatActivity() {
 
         loadPosts()
         loadUserProfileImage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadUserProfileImage()
+        loadPosts()
     }
 
     private fun loadUserProfileImage() {
@@ -69,20 +76,20 @@ class MainActivity : AppCompatActivity() {
     private fun loadPosts() {
         db.collection("posts").orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
-                // Handle potential errors
+
                 if (error != null) {
 
                     return@addSnapshotListener
                 }
 
-                // Check if the snapshot is null
-                val posts = snapshot?.documents?.map { document ->
-                    var post = document.toObject(Post::class.java) // Create Post object
-                    post?.id = document.id // Set the id from the DocumentSnapshot
-                    post
-                }?.filterNotNull() ?: return@addSnapshotListener // Filter out null posts
 
-                // Update the adapter with the fetched posts
+                val posts = snapshot?.documents?.map { document ->
+                    var post = document.toObject(Post::class.java)
+                    post?.id = document.id
+                    post
+                }?.filterNotNull() ?: return@addSnapshotListener
+
+
                 postsAdapter.updatePosts(posts)
             }
     }
