@@ -3,28 +3,38 @@ package com.example.sosialmediaapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.supabaseapp.supabase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.buildJsonObject
+import java.security.spec.ECField
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_register)
 
-        // Inisialisasi Firebase Auth dan Firestore
-        auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
+
+
 
         // Menghubungkan komponen UI
         val etEmail = findViewById<EditText>(R.id.etEmail)
@@ -33,52 +43,81 @@ class RegisterActivity : AppCompatActivity() {
         val btnRegister = findViewById<Button>(R.id.btnRegister)
         val tvLogin = findViewById<TextView>(R.id.tvLogin)
 
-        // Menangani klik tombol register
+
         btnRegister.setOnClickListener {
+
             val email = etEmail.text.toString()
             val password = etPassword.text.toString()
-            val name = etName.text.toString() // Ambil nama dari EditText
-            register(email, password, name)
+            val name = etName.text.toString()
+            if (name.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()) {
+                register(email, password, name)
+
+            } else {
+                Toast.makeText(this, "Isi semua kolom!", Toast.LENGTH_SHORT).show()
+            }
+
+
         }
 
-        // Menangani klik untuk beralih ke halaman login
+
         tvLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 
-    private fun register(email: String, password: String, name: String) {
-        // Pendaftaran pengguna dengan Firebase Authentication
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Mendapatkan UID pengguna yang baru terdaftar
-                    val uid = auth.currentUser?.uid
+    private fun register(emailValue: String, passwordValue: String, nameValue: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val auth = supabase.auth
+            try {
 
-                    // Membuat objek user untuk menyimpan ke Firestore
-                    val user = hashMapOf(
-                        "uid" to uid,
-                        "name" to name,
-                        "email" to email,
-                        "createdAt" to Timestamp.now() // Menyimpan waktu pendaftaran
-                    )
-
-                    // Menyimpan data pengguna ke Firestore di koleksi 'users'
-                    firestore.collection("users")
-                        .document(uid!!)
-                        .set(user)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "User registered successfully!", Toast.LENGTH_SHORT).show()
-                            // Beralih ke halaman lain setelah pendaftaran berhasil
-                            startActivity(Intent(this, LoginActivity::class.java))
-                            finish() // Tutup activity ini
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(this, "Error saving user: $e", Toast.LENGTH_SHORT).show()
-                        }
-                } else {
-                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                val result = auth.signUpWith(Email) {
+                    email = emailValue
+                    password = passwordValue
                 }
+
+                val user = supabase.auth.retrieveUserForCurrentSession(updateSession = true)
+
+
+                if (user.id != null) {
+                    val profile = buildJsonObject {
+                        put("user_id", user.id)
+                        put("full_name", name)
+                        put("usernme", phone)
+                    }
+                    try {
+                        val profileResult = supabase.postgrest.from("profiles").insert(
+                            profile
+                        )
+
+                    }catch (e:Exception){
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@RegisterActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                        Log.e("RegisterActivity", "Error saat membuat profile", e)
+
+                    }
+
+
+
+                } else {
+                    throw Exception("Sign-up failed, user ID not returned")
+                }
+
+                // Show success message
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@RegisterActivity, "Registrasi berhasil", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+
+
+            }catch (e:Exception){
+                withContext(Dispatchers.Main){
+                    Toast.makeText(this@RegisterActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+                Log.e("RegisterActivity", "Error: ${e.message}", e)
             }
+
+        }
+
     }
 }
