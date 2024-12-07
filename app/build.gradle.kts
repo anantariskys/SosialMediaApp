@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
+
 }
 
 android {
@@ -37,13 +38,16 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation ("com.google.firebase:firebase-auth-ktx:22.1.0")
-    implementation ("com.google.firebase:firebase-firestore-ktx:24.7.1")
-    implementation ("com.google.firebase:firebase-storage-ktx:20.2.0")
-    implementation ("com.squareup.picasso:picasso:2.8")
+    implementation("io.coil-kt:coil:2.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
 
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.2"))
+
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:storage-kt")
+    implementation("io.ktor:ktor-client-android:3.0.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
