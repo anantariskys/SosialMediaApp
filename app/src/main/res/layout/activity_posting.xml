@@ -20,23 +20,39 @@
     <ImageView
         android:id="@+id/ivPreview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:visibility="gone"
         android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"/>
+       />
 
-    <Button
-        android:id="@+id/btnSelectImage"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pilih Gambar"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="16dp">
 
-    <Button
-        android:id="@+id/btnPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Posting"
-        android:layout_marginTop="16dp"/>
+        <Button
+            android:id="@+id/btnSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pilih Gambar"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/secondary"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnPost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Posting"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primaryDark"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+
 
 </LinearLayout>
