@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Netflix Inspired Colors -->
+    <color name="primary">#E50914</color> <!-- Red -->
+    <color name="primaryDark">#B00710</color> <!-- Dark Red -->
+    <color name="secondary">#221F20</color> <!-- Dark Grey -->
+    <color name="background">#141414</color> <!-- Very Dark Grey -->
+    <color name="cardBackground">#212121</color> <!-- Card Background -->
+    <color name="accent">#F5F5F1</color> <!-- Light Accent Color -->
+    <color name="grey">#B3B3B3</color> <!-- Grey for Text -->
+    <color name="lightGrey">#EAEAEA</color> <!-- Light Grey for Borders -->
+
+    <!-- Additional Colors -->
+    <color name="ivory">#F9FBF2</color>
+    <color name="lightcyan">#D7F9FF</color>
+    <color name="jordyblue">#AFCBFF</color>
+    <color name="oxfordblue">#0E1C36</color>
 </resources>
