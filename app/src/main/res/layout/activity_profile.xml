@@ -7,22 +7,17 @@
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:layout_gravity="center" />
 
     <Button
         android:id="@+id/btnSelectProfileImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Profile Image" />
-
-    <TextView
-        android:id="@+id/tvDisplayName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Display Name"
-        android:textSize="18sp" />
+        android:backgroundTint="@color/secondary"
+        android:text="Pilih Gambar" />
 
     <EditText
         android:id="@+id/etDisplayName"
@@ -34,11 +29,29 @@
         android:id="@+id/btnUpdateProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/primaryDark"
         android:text="Update Profile" />
 
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/background"
         android:text="Logout" />
+
+    <!-- RecyclerView untuk menampilkan postingan pengguna -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Postingan Anda"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPosts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp" />
 </LinearLayout>
