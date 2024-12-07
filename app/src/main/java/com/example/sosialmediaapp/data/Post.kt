@@ -7,6 +7,7 @@ data class Post(
     val userId: String = "",       // Provide a default value for the userId
     val timestamp: Long = 0,       // Provide a default value for the timestamp
     val likes: Int = 0,            // Provide a default value for the likes
-    val likedBy: List<String> = listOf() // Provide a default value for the likedBy list
+    val likedBy: List<String> = listOf() ,
+    val comments: Int = 0
 )
 
