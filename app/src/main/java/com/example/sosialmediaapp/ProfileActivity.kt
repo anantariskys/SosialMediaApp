@@ -1,5 +1,6 @@
 package com.example.sosialmediaapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +12,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.sosialmediaapp.adapter.PostAdapter
+import com.example.sosialmediaapp.data.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -20,9 +25,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
+    private lateinit var postsAdapter: PostAdapter
 
     private lateinit var profileImageView: ImageView
-    private lateinit var displayNameTextView: TextView
     private lateinit var displayNameEditText: EditText
     private lateinit var btnSelectProfileImage: Button
     private lateinit var btnUpdateProfile: Button
@@ -37,6 +42,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -45,8 +51,16 @@ class ProfileActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewPosts)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val currentUserId = auth.currentUser?.uid ?: ""
+        postsAdapter = PostAdapter(mutableListOf(), currentUserId, db)
+        recyclerView.adapter = postsAdapter
+
+
         profileImageView = findViewById(R.id.ivProfileImage)
-        displayNameTextView = findViewById(R.id.tvDisplayName)
+
         displayNameEditText = findViewById(R.id.etDisplayName)
         btnSelectProfileImage = findViewById(R.id.btnSelectProfileImage)
         btnUpdateProfile = findViewById(R.id.btnUpdateProfile)
@@ -80,7 +94,7 @@ class ProfileActivity : AppCompatActivity() {
                     val displayName = document.getString("name")
                     val profileImage = document.getString("profileImage")
 
-                    displayNameTextView.text = displayName ?: "Nama Pengguna"
+
                     displayNameEditText.setText(displayName)
 
                     profileImage?.let { imageUrl ->
@@ -107,24 +121,46 @@ class ProfileActivity : AppCompatActivity() {
                         storage.reference.child("profile_images/$fileName")
                     } }
 
-                    // Jika ada URL gambar profil lama, hapus gambar lama
+
                     if (oldImageRef != null) {
                         oldImageRef.delete().addOnSuccessListener {
-                            // Upload gambar profil baru setelah menghapus yang lama
+
                             uploadNewProfileImage(uri, currentUser.uid)
                         }.addOnFailureListener {
-                            // Jika gagal menghapus gambar lama, tetap coba untuk upload gambar baru
+
                             uploadNewProfileImage(uri, currentUser.uid)
                         }
                     } else {
-                        // Jika tidak ada gambar profil lama, langsung upload yang baru
+
                         uploadNewProfileImage(uri, currentUser.uid)
                     }
                 }.addOnFailureListener {
                     Toast.makeText(this, "Failed to get old profile image URL", Toast.LENGTH_SHORT).show()
                 }
         }
+
     }
+
+
+    private fun loadPosts() {
+        val currentUserId = auth.currentUser?.uid ?: return
+        db.collection("posts")
+          // Fetch only posts by the logged-in user
+            .get()
+            .addOnSuccessListener { documents ->
+                val posts = mutableListOf<Post>()
+                for (document in documents) {
+                    val post = document.toObject(Post::class.java)
+                    posts.add(post)
+                }
+                postsAdapter.updatePosts(posts)
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load user posts", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 
     private fun uploadNewProfileImage(uri: Uri, uid: String) {
         val storageRef = storage.reference.child("profile_images/$uid.jpg")
@@ -147,7 +183,7 @@ class ProfileActivity : AppCompatActivity() {
         user?.let { currentUser ->
             db.collection("users").document(currentUser.uid).update("name", newDisplayName)
                 .addOnSuccessListener {
-                    displayNameTextView.text = newDisplayName
+
                     Toast.makeText(this, "Display name updated", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
                     Toast.makeText(this, "Failed to update display name", Toast.LENGTH_SHORT).show()
