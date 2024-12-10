@@ -10,9 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.supabaseapp.supabase
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
@@ -21,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.security.spec.ECField
 
 class RegisterActivity : AppCompatActivity() {
@@ -36,10 +34,11 @@ class RegisterActivity : AppCompatActivity() {
 
 
 
-        // Menghubungkan komponen UI
+
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etName = findViewById<EditText>(R.id.etName) // EditText untuk nama pengguna
+        val etName = findViewById<EditText>(R.id.etName)
+        val etDisplayName = findViewById<EditText>(R.id.etDisplayName)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
         val tvLogin = findViewById<TextView>(R.id.tvLogin)
 
@@ -49,9 +48,9 @@ class RegisterActivity : AppCompatActivity() {
             val email = etEmail.text.toString()
             val password = etPassword.text.toString()
             val name = etName.text.toString()
-            if (name.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()) {
-                register(email, password, name)
-
+            val display_name = etDisplayName.text.toString()
+            if (name.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()&&display_name.isNotEmpty()) {
+                register(email, password, name,display_name)
             } else {
                 Toast.makeText(this, "Isi semua kolom!", Toast.LENGTH_SHORT).show()
             }
@@ -65,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun register(emailValue: String, passwordValue: String, nameValue: String) {
+    private fun register(emailValue: String, passwordValue: String, nameValue: String,displayNameValue:String) {
         CoroutineScope(Dispatchers.IO).launch {
             val auth = supabase.auth
             try {
@@ -81,13 +80,20 @@ class RegisterActivity : AppCompatActivity() {
                 if (user.id != null) {
                     val profile = buildJsonObject {
                         put("user_id", user.id)
-                        put("full_name", name)
-                        put("usernme", phone)
+                        put("full_name", nameValue)
+                        put("display_name", displayNameValue)
                     }
                     try {
-                        val profileResult = supabase.postgrest.from("profiles").insert(
+                        val profileResult = supabase.postgrest.from("Profiles").insert(
                             profile
                         )
+                        if (profileResult.data.isNotEmpty()){
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@RegisterActivity, "Registrasi berhasil", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                        }
+
 
                     }catch (e:Exception){
                         withContext(Dispatchers.Main) {
