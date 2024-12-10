@@ -47,6 +47,18 @@
             android:padding="12dp"
 
             android:layout_marginBottom="12dp" />
+        <EditText
+            android:id="@+id/etDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+
+            android:drawableStart="@drawable/ic_person"
+            android:background="@drawable/edittext_background"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/etEmail"
