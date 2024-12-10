@@ -32,15 +32,15 @@ class CommentAdapter(private val comments: List<Comment>) :
         holder.commentContent.text = comment.content
 
 
-        comment.timestamp?.let {
-            // Convert Timestamp to Date
-            val date = it.toDate() // Convert Timestamp to Date
-            // Format the date to a more readable format
-            val formattedDate = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(date)
-            holder.comentTime.text= formattedDate // Set formatted date to the TextView
-        } ?: run {
-            holder.comentTime.text = "No date" // Handle null timestamp
-        }
+//        comment.timestamp?.let {
+//            // Convert Timestamp to Date
+//            val date = it.toDate() // Convert Timestamp to Date
+//            // Format the date to a more readable format
+//            val formattedDate = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(date)
+//            holder.comentTime.text= formattedDate // Set formatted date to the TextView
+//        } ?: run {
+//            holder.comentTime.text = "No date" // Handle null timestamp
+//        }
     }
 
 
