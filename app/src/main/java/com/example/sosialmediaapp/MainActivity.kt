@@ -10,9 +10,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.sosialmediaapp.adapter.PostAdapter
 import com.example.sosialmediaapp.data.Post
+import com.example.sosialmediaapp.data.Profiles
 import com.example.supabaseapp.supabase
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.CoroutineScope
@@ -47,25 +50,57 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, PostingActivity::class.java)
             startActivity(intent)
         }
-
+        loadUserProfileImage()
         loadPosts()
+
     }
 
     override fun onResume() {
         super.onResume()
+        loadUserProfileImage()
         loadPosts()
+
     }
 
     private fun loadUserProfileImage() {
-        // Implementasi untuk memuat gambar profil pengguna
+        val ivProfile = findViewById<ImageView>(R.id.ivProfileImage)
+        val userCredential = supabase.auth.currentUserOrNull()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Log.d("MainActivity", "Fetching profile for user ID: ${userCredential?.id}")
+                if (userCredential?.id != null) {
+                    val profiles = supabase.postgrest.from("Profiles").select(columns = Columns.ALL) {
+                        filter { eq("user_id", userCredential.id) }
+                    }.decodeSingleOrNull<Profiles>()
+
+                    Log.d("MainActivity", "Fetched profile data: $profiles")
+                    withContext(Dispatchers.Main) {
+                        profiles?.image?.let {
+                            ivProfile.load(it)
+                        } ?: ivProfile.setImageResource(R.drawable.ic_person)
+                    }
+                } else {
+                    Log.d("MainActivity", "User credential is null or ID is missing")
+                    withContext(Dispatchers.Main) {
+                        ivProfile.setImageResource(R.drawable.ic_person)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error fetching user profile", e)
+            }
+        }
     }
+
 
     private fun loadPosts() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                val columns = Columns.raw(
+                    "*"
+                )
                 val posts = supabase.postgrest
-                    .from("Posts") // Pastikan nama tabel sesuai
-                    .select(columns = Columns.ALL)
+                    .from("Posts")
+                    .select(columns=columns)
                     .decodeList<Post>()
 
                 Log.d("MainActivity", "Fetched posts: $posts")
