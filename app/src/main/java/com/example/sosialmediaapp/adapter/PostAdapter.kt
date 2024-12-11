@@ -15,6 +15,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sosialmediaapp.CommentActivity
 import com.example.sosialmediaapp.R
 import com.example.sosialmediaapp.data.Post
+import com.example.sosialmediaapp.data.Profiles
+import com.example.sosialmediaapp.data.User
+import com.example.supabaseapp.supabase
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.toLocalTime
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class PostAdapter(
@@ -28,6 +41,7 @@ class PostAdapter(
         val image: ImageView = itemView.findViewById(R.id.ivPostImage)
         val likeButton: AppCompatImageButton = itemView.findViewById(R.id.btnLike)
         val likesTextView: TextView = itemView.findViewById(R.id.tvLikes)
+        val createdAt :TextView = itemView.findViewById(R.id.tvCreatedAt)
         val userName: TextView = itemView.findViewById(R.id.tvUserName)
         val btnComment : ImageButton = itemView.findViewById(R.id.btnComment)
         val commentCount: TextView = itemView.findViewById(R.id.tvComments)
@@ -44,6 +58,43 @@ class PostAdapter(
 
 
         holder.content.text = post.caption
+        val formattedDate = formatCreatedAt(post.created_at)
+
+
+        holder.createdAt.text = formattedDate
+
+
+
+
+
+
+
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val profile = supabase.postgrest
+                    .from("Profiles")
+                    .select(){
+                        filter {
+                            eq("user_id", post.user_id)
+                        }
+                    }
+                    .decodeSingleOrNull<Profiles>()
+
+                withContext(Dispatchers.Main) {
+                    if (profile != null) {
+                        holder.userName.text = profile.display_name// Atur data user di UI
+                        Log.d("PostAdapter", "Profile fetched successfully: ${profile.id}")
+                    } else {
+                        Log.e("PostAdapter", "Profile is null")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("PostAdapter", "Error fetching profile: ${e.message}", e)
+            }
+        }
+
 
         // Load image using Picasso
         if (!post.image.isNullOrEmpty()) {
@@ -88,6 +139,27 @@ class PostAdapter(
     private fun unlikePost(postId: String, currentLikes: Int) {
 
     }
+    fun formatCreatedAt(dateString: String): String {
+
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+
+        // Format output yang diinginkan
+        val outputFormat = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+
+        return try {
+            // Mengonversi string ke objek Date
+            val date = inputFormat.parse(dateString)
+
+            // Jika date berhasil diparse, format dan kembalikan
+            date?.let {
+                outputFormat.format(it)
+            } ?: "Invalid Date" // Jika parsing gagal, kembalikan "Invalid Date"
+        } catch (e: Exception) {
+            e.printStackTrace() // Tangani error jika ada masalah dalam parsing
+            "Invalid Date" // Jika terjadi kesalahan, kembalikan "Invalid Date"
+        }
+    }
+
 
     // Function to update the list of posts
     fun updatePosts(newPosts: List<Post>) {
