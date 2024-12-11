@@ -19,8 +19,26 @@
         android:backgroundTint="@color/secondary"
         android:text="Pilih Gambar" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Display Name" />
+
     <EditText
         android:id="@+id/etDisplayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Update Display Name" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Full Name" />
+
+    <EditText
+        android:id="@+id/etFullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Update Display Name" />
