@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.sosialmediaapp.CommentActivity
 import com.example.sosialmediaapp.R
 import com.example.sosialmediaapp.data.Post
@@ -27,6 +28,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.toLocalTime
 import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
@@ -55,22 +58,9 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
-
-
         holder.content.text = post.caption
         val formattedDate = formatCreatedAt(post.created_at)
-
-
         holder.createdAt.text = formattedDate
-
-
-
-
-
-
-
-
-
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val profile = supabase.postgrest
@@ -99,6 +89,7 @@ class PostAdapter(
         // Load image using Picasso
         if (!post.image.isNullOrEmpty()) {
             holder.image.visibility = View.VISIBLE
+            holder.image.load(post.image)
         } else {
             holder.image.visibility = View.GONE
         }
@@ -141,7 +132,8 @@ class PostAdapter(
     }
     fun formatCreatedAt(dateString: String): String {
 
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX", Locale.getDefault())
 
         // Format output yang diinginkan
         val outputFormat = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
