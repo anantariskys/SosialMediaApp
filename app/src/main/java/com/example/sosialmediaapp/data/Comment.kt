@@ -1,10 +1,14 @@
 package com.example.sosialmediaapp.data
 
-//import com.google.firebase.Timestamp
+import kotlinx.serialization.Serializable
 
+//import com.google.firebase.Timestamp
+@Serializable
 data class Comment(
-    val userName: String = "",
-    val content: String = "",
-//    val timestamp: Timestamp? = null
+    val id: Int,
+    val user_id:String,
+    val post_id: Int,
+    val caption: String,
+    val created_at: String
 )
 
