@@ -1,50 +1,113 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    android:padding="16dp">
-
-
-    <TextView
-        android:id="@+id/tvPostContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Loading post content..." />
-
-    <ImageView
-        android:id="@+id/ivPostImage"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitStart"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <!-- Daftar Komentar -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvComments"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="16dp" />
+        <!-- Post Content Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:background="@color/white"
+                android:elevation="16dp">
 
+                <!-- Username and Created At -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/tvUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ini username"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_weight="1" />
 
-    <!-- Input Komentar -->
-    <EditText
-        android:id="@+id/etComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Tulis komentar..."
+                    <TextView
+                        android:id="@+id/tvCreatedAt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="ini createdat"
+                        android:textAlignment="textEnd"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-        />
+                <!-- Post Image -->
+                <ImageView
+                    android:id="@+id/ivPostImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitStart"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp" />
 
-    <Button
-        android:id="@+id/btnSendComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/primaryDark"
-        android:text="Kirim" />
-</LinearLayout>
+                <!-- Post Content -->
+                <TextView
+                    android:id="@+id/tvPostContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Loading post content..."
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <!-- Input Field for Comment -->
+            <EditText
+                android:id="@+id/etComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tulis komentar..." />
+
+            <!-- Send Comment Button -->
+            <Button
+                android:id="@+id/btnSendComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primaryDark"
+                android:text="Kirim" />
+        </LinearLayout>
+
+        <!-- Komentar Section Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Komentar"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Daftar Komentar (RecyclerView) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComments"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="16dp" />
+
+        <!-- Input Komentar Section -->
+
+    </LinearLayout>
+</ScrollView>
