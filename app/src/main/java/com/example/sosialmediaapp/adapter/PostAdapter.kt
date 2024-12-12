@@ -22,6 +22,7 @@ import com.example.supabaseapp.supabase
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.Count
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.log
 
 
 class PostAdapter(
@@ -72,9 +74,19 @@ class PostAdapter(
                     }
                     .decodeSingleOrNull<Profiles>()
 
+
+                val commentCount = supabase.postgrest.from("Comments").select{
+                    count(Count.EXACT)
+                    filter {
+                        eq("post_id",post.id)
+                    }
+                }.countOrNull()
+                Log.d("PostAdapter", "Comment count: ${commentCount}")
+
                 withContext(Dispatchers.Main) {
                     if (profile != null) {
-                        holder.userName.text = profile.display_name// Atur data user di UI
+                        holder.userName.text = profile.display_name
+                        holder.commentCount.text = "${commentCount.toString()} Comments"
                         Log.d("PostAdapter", "Profile fetched successfully: ${profile.id}")
                     } else {
                         Log.e("PostAdapter", "Profile is null")
@@ -84,6 +96,8 @@ class PostAdapter(
                 Log.e("PostAdapter", "Error fetching profile: ${e.message}", e)
             }
         }
+
+
 
 
         // Load image using Picasso
