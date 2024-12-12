@@ -1,8 +1,17 @@
+<ScrollView android:layout_height="match_parent" 
+    
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+
+
+
+
+
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -20,7 +29,7 @@
         android:text="Pilih Gambar" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvDisplayName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Display Name" />
@@ -32,7 +41,7 @@
         android:hint="Update Display Name" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvFullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Full Name" />
@@ -57,7 +66,6 @@
         android:backgroundTint="@color/background"
         android:text="Logout" />
 
-    <!-- RecyclerView untuk menampilkan postingan pengguna -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,3 +81,4 @@
         android:layout_weight="1"
         android:paddingTop="8dp" />
 </LinearLayout>
+</ScrollView>
