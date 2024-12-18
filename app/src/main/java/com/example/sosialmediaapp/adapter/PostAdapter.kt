@@ -44,8 +44,7 @@ class PostAdapter(
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val content: TextView = itemView.findViewById(R.id.tvContent)
         val image: ImageView = itemView.findViewById(R.id.ivPostImage)
-        val likeButton: AppCompatImageButton = itemView.findViewById(R.id.btnLike)
-        val likesTextView: TextView = itemView.findViewById(R.id.tvLikes)
+
         val createdAt :TextView = itemView.findViewById(R.id.tvCreatedAt)
         val userName: TextView = itemView.findViewById(R.id.tvUserName)
         val btnComment : ImageButton = itemView.findViewById(R.id.btnComment)
@@ -107,7 +106,8 @@ class PostAdapter(
         } else {
             holder.image.visibility = View.GONE
         }
-        holder.likeButton.setImageResource(R.drawable.ic_heart)
+
+
 
 
 
